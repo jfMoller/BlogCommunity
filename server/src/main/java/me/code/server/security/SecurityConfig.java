@@ -38,8 +38,13 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         (auth ->
                                 auth
-                                        .requestMatchers("/api/test").hasRole("ADMIN")
-                                        .requestMatchers("/api/login").permitAll()
+                                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                                        .requestMatchers(
+                                                "/api/login",
+                                                "/api/blogs/all",
+                                                "/api/blogs/{blogId}",
+                                                "/api/blogs/search"
+                                        ).permitAll()
                                         .anyRequest().authenticated()))
                 .oauth2ResourceServer(
                         oauth2 ->

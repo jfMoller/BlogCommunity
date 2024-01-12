@@ -1,5 +1,6 @@
 package me.code.server.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,6 +25,7 @@ public class Blog {
     private String text;
     private LocalDateTime timeStamp;
 
+    @JsonProperty("author")
     @Relationship(type = "PUBLISHED_BY")
     User user;
 

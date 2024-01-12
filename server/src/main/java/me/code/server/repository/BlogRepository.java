@@ -14,7 +14,7 @@ public interface BlogRepository extends Neo4jRepository<Blog, String> {
     @Query("MATCH (b:Blog) WHERE b.id = $blogId RETURN b")
     Optional<Blog> findById(String blogId);
 
-    @Query("MATCH (b:Blog) return b ORDER BY b.timeStamp $order)")
+    @Query("MATCH (b:Blog) return b ORDER BY b.timeStamp $order")
     List<Blog> findAllAndOrderByTimeStamp(String order);
 
     @Query("MATCH (b:Blog) WHERE toLower(b.title) CONTAINS toLower($search) RETURN b " +
@@ -22,9 +22,19 @@ public interface BlogRepository extends Neo4jRepository<Blog, String> {
             " THEN 0 ELSE 1 END")
     List<Blog> findBySearch(String search);
 
+    @Query("MATCH (b:Blog) RETURN b ORDER BY b.timeStamp DESC")
+    List<Blog> findAllAndOrderByNewest();
+
+    @Query("MATCH (b:Blog) RETURN b ORDER BY b.timeStamp ASC")
+    List<Blog> findAllAndOrderByOldest();
+
     @Query("MATCH (b:Blog) WHERE toLower(b.title) CONTAINS toLower($search) RETURN b " +
-            "ORDER BY b.timeStamp $order")
-    List<Blog> findBySearchAndOrderByTimeStamp(String search, String order);
+            "ORDER BY b.timeStamp DESC")
+    List<Blog> findBySearchAndOrderByNewest(String search);
+
+    @Query("MATCH (b:Blog) WHERE toLower(b.title) CONTAINS toLower($search) RETURN b " +
+            "ORDER BY b.timeStamp ASC")
+    List<Blog> findBySearchAndOrderByOldest(String search);
 
 }
 

@@ -72,8 +72,8 @@ public class BlogServiceImpl implements BlogService {
 
     private List<Blog> loadAllBlogsWithFilter(String filter) {
         return switch (filter) {
-            case "newest" -> blogRepository.findAllAndOrderByTimeStamp("ASC");
-            case "oldest" -> blogRepository.findAllAndOrderByTimeStamp("DESC");
+            case "newest" -> blogRepository.findAllAndOrderByNewest();
+            case "oldest" -> blogRepository.findAllAndOrderByOldest();
             default -> getAllBlogs();
         };
     }
@@ -84,8 +84,8 @@ public class BlogServiceImpl implements BlogService {
 
     private List<Blog> loadSearchedBlogs(String search, String filter) {
         return switch (filter) {
-            case "newest" -> blogRepository.findBySearchAndOrderByTimeStamp(search, "ASC");
-            case "oldest" -> blogRepository.findBySearchAndOrderByTimeStamp(search, "DESC");
+            case "newest" -> blogRepository.findBySearchAndOrderByNewest(search);
+            case "oldest" -> blogRepository.findBySearchAndOrderByOldest(search);
             default -> getAllBlogs();
         };
     }
