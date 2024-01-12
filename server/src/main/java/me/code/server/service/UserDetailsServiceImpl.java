@@ -1,4 +1,4 @@
-package me.code.server.security;
+package me.code.server.service;
 
 import me.code.server.model.User;
 import me.code.server.repository.UserRepository;

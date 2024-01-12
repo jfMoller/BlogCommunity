@@ -1,7 +1,7 @@
 package me.code.server.controller;
 
 import me.code.server.model.User;
-import me.code.server.service.JwtService;
+import me.code.server.security.JwtProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,12 +15,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class LoginController {
 
     private final AuthenticationManager authenticationManager;
-    private final JwtService jwtService;
+    private final JwtProvider jwtProvider;
 
     @Autowired
-    public LoginController(AuthenticationManager authenticationManager, JwtService jwtService) {
+    public LoginController(AuthenticationManager authenticationManager, JwtProvider jwtProvider) {
         this.authenticationManager = authenticationManager;
-        this.jwtService = jwtService;
+        this.jwtProvider = jwtProvider;
     }
 
     public record LoginDto(String username, String password) {
@@ -35,9 +35,8 @@ public class LoginController {
                 authenticationManager.authenticate(authRequest);
 
         if (authResult.isAuthenticated()) {
-            System.out.println(authResult);
-            return jwtService.generateToken((User) authResult.getPrincipal());
+            return jwtProvider.generateToken((User) authResult.getPrincipal());
         } else return null;
     }
-    
+
 }

@@ -1,33 +1,27 @@
-package me.code.server.service;
+package me.code.server.security;
 
 import me.code.server.model.User;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
-import org.springframework.security.oauth2.jwt.JwsHeader;
-import org.springframework.security.oauth2.jwt.JwtClaimsSet;
-import org.springframework.security.oauth2.jwt.JwtEncoder;
-import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
+import org.springframework.security.oauth2.jwt.*;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
 @Service
-public class JwtService {
+public class JwtProvider {
 
     private final JwtEncoder jwtEncoder;
 
-    public JwtService(JwtEncoder jwtEncoder) {
+    public JwtProvider(JwtEncoder jwtEncoder) {
         this.jwtEncoder = jwtEncoder;
     }
 
     public String generateToken(User user) {
-        System.out.println(user);
-
         JwsHeader jwsHeader = JwsHeader.with(MacAlgorithm.HS256).build();
 
         JwtClaimsSet claimsSet = JwtClaimsSet.builder()
-                .subject(user.getId())
-                .claim("username", user.getUsername())
+                .subject(user.getUsername())
                 .claim("role", user.getRole())
                 .issuer("Self")
                 .issuedAt(Instant.now())
