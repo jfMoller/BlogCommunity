@@ -1,8 +1,14 @@
 package me.code.server.controller;
 
+import me.code.server.dto.request.LoginDto;
+import me.code.server.dto.response.AuthSuccessDto;
+import me.code.server.dto.response.SuccessDto;
+import me.code.server.exception.CustomRuntimeException;
 import me.code.server.model.User;
 import me.code.server.security.JwtProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,20 +29,37 @@ public class LoginController {
         this.jwtProvider = jwtProvider;
     }
 
-    public record LoginDto(String username, String password) {
-    }
-
     @PostMapping("/login")
-    public String login(@RequestBody LoginDto dto) {
+    public ResponseEntity<SuccessDto> login(@RequestBody LoginDto dto) {
+        try {
+            var authRequest =
+                    UsernamePasswordAuthenticationToken.unauthenticated(dto.username(), dto.password());
+            var authResult =
+                    authenticationManager.authenticate(authRequest);
 
-        var authRequest =
-                UsernamePasswordAuthenticationToken.unauthenticated(dto.username(), dto.password());
-        var authResult =
-                authenticationManager.authenticate(authRequest);
+            if (authResult.isAuthenticated()) {
+                var authUser = (User) authResult.getPrincipal();
+                String jwtToken = jwtProvider.generateToken(authUser);
 
-        if (authResult.isAuthenticated()) {
-            return jwtProvider.generateToken((User) authResult.getPrincipal());
-        } else return null;
+                return new AuthSuccessDto(
+                        HttpStatus.OK,
+                        "Login successful",
+                        authUser.getRole().toString(),
+                        jwtToken)
+                        .toResponseEntity();
+
+            } else {
+                throw new CustomRuntimeException(
+                        HttpStatus.UNAUTHORIZED,
+                        "Authentication failed",
+                        "Failed to authenticate user with username: " + dto.username());
+            }
+        } catch (Exception exception) {
+            throw new CustomRuntimeException(
+                    HttpStatus.UNAUTHORIZED,
+                    "Could not login",
+                    exception.getMessage());
+        }
     }
 
 }
