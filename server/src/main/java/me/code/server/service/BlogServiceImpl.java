@@ -1,5 +1,6 @@
 package me.code.server.service;
 
+import jakarta.transaction.Transactional;
 import me.code.server.dto.response.SuccessDto;
 import me.code.server.exception.CustomRuntimeException;
 import me.code.server.model.Blog;
@@ -89,4 +90,39 @@ public class BlogServiceImpl implements BlogService {
             default -> getAllBlogs();
         };
     }
+
+    @Transactional
+    public SuccessDto deleteAllBlogs() {
+        blogRepository.deleteAllBlogs();
+
+        if (blogRepository.count() == 0) {
+            return new SuccessDto(
+                    HttpStatus.OK,
+                    "Deletion successful");
+        } else {
+            throw new CustomRuntimeException(
+                    HttpStatus.BAD_REQUEST,
+                    "Deletion failed",
+                    "Could not delete all blogs"
+            );
+        }
+    }
+
+    @Transactional
+    public SuccessDto deleteBlog(String blogId) {
+        blogRepository.deleteBlog(blogId);
+
+        if (!blogRepository.existsById(blogId)) {
+            return new SuccessDto(
+                    HttpStatus.OK,
+                    "Successfully deleted blog with id: " + blogId);
+        } else {
+            throw new CustomRuntimeException(
+                    HttpStatus.BAD_REQUEST,
+                    "Deletion failed",
+                    "Could not delete blog with id: " + blogId
+            );
+        }
+    }
 }
+
