@@ -1,6 +1,6 @@
 package me.code.server.service;
 
-import org.springframework.security.core.Authentication;
+import me.code.server.model.User;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.JwsHeader;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
@@ -20,11 +20,15 @@ public class JwtService {
         this.jwtEncoder = jwtEncoder;
     }
 
-    public String generateToken(Authentication authResult) {
+    public String generateToken(User user) {
+        System.out.println(user);
+
         JwsHeader jwsHeader = JwsHeader.with(MacAlgorithm.HS256).build();
 
         JwtClaimsSet claimsSet = JwtClaimsSet.builder()
-                .subject(authResult.getName())
+                .subject(user.getId())
+                .claim("username", user.getUsername())
+                .claim("role", user.getRole())
                 .issuer("Self")
                 .issuedAt(Instant.now())
                 .expiresAt(Instant.now().plus(30, ChronoUnit.MINUTES))

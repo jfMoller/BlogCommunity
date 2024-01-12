@@ -1,5 +1,6 @@
 package me.code.server.controller;
 
+import me.code.server.model.User;
 import me.code.server.service.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -34,8 +35,9 @@ public class LoginController {
                 authenticationManager.authenticate(authRequest);
 
         if (authResult.isAuthenticated()) {
-            return jwtService.generateToken(authResult);
+            System.out.println(authResult);
+            return jwtService.generateToken((User) authResult.getPrincipal());
         } else return null;
     }
-
+    
 }

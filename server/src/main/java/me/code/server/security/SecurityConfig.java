@@ -8,17 +8,15 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.jwt.JwtEncoder;
-import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
-import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
+import org.springframework.security.oauth2.jwt.*;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 
 import javax.crypto.SecretKey;
@@ -28,20 +26,37 @@ import javax.crypto.spec.SecretKeySpec;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private SecretKey getSecretKey() {
-        return new SecretKeySpec("mock-key123".repeat(30).getBytes(), "HmacSHA256");
-    }
-
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
-                        (auth -> auth.requestMatchers("/api/login").permitAll()
-                                .anyRequest().authenticated()))
-                .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
-                .sessionManagement(sessionConfig -> sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-
+                        (auth ->
+                                auth
+                                        .requestMatchers("/api/test").hasRole("ADMIN")
+                                        .requestMatchers("/api/login").permitAll()
+                                        .anyRequest().authenticated()))
+                .oauth2ResourceServer(
+                        oauth2 ->
+                                oauth2.jwt(
+                                        jwtConfigurer ->
+                                                jwtConfigurer
+                                                        .jwtAuthenticationConverter(jwtAuthenticationConverter())))
+                .sessionManagement(
+                        sessionConfig ->
+                                sessionConfig
+                                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         return http.build();
+    }
+
+    private JwtAuthenticationConverter jwtAuthenticationConverter() {
+        var jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
+        jwtGrantedAuthoritiesConverter.setAuthoritiesClaimName("role");
+        jwtGrantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
+
+        var jwtAuthenticationConverter = new JwtAuthenticationConverter();
+        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
+
+        return jwtAuthenticationConverter;
     }
 
     @Bean
@@ -58,6 +73,12 @@ public class SecurityConfig {
         dao.setPasswordEncoder(passwordEncoder);
 
         return new ProviderManager(dao);
+    }
+
+    private SecretKey getSecretKey() {
+        return new SecretKeySpec(
+                "keyboardcat-fwfjnwjkqew9234j3nfweifwejnfwejknewffw83r2jwe".getBytes(),
+                "HmacSHA256");
     }
 
     @Bean
