@@ -16,9 +16,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     private ResponseEntity<ErrorDto> buildResponseEntity(CustomRuntimeException exception) {
         HttpStatus status = exception.getStatus();
         String message = exception.getMessage();
-        String exceptionMessage = exception.getExceptionMessage();
+        String errorDetails = exception.getExceptionMessage();
 
-        return new ErrorDto(status, message, exceptionMessage).toResponseEntity();
+        return new ErrorDto(status, message, errorDetails).toResponseEntity();
     }
 
     @ExceptionHandler({CustomRuntimeException.class})

@@ -4,17 +4,18 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-public class ErrorDto extends Result {
+public class ErrorDto extends Result implements ResponseEntityConvertible<ErrorDto> {
 
-    @JsonProperty("details")
-    private String exceptionMessage;
+    @JsonProperty("errorDetails")
+    private String errorDetails;
 
-    public ErrorDto(HttpStatus status, String message, String exceptionMessage) {
+    public ErrorDto(HttpStatus status, String message, String errorDetails) {
         super(status, message, false);
-        this.exceptionMessage = exceptionMessage;
+        this.errorDetails = errorDetails;
     }
 
+    @Override
     public ResponseEntity<ErrorDto> toResponseEntity() {
-        return ResponseEntity.status(this.status).body(this);
+        return ResponseEntity.status(status).body(this);
     }
 }

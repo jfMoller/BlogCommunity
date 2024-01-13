@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,10 +33,7 @@ public class LoginController {
     @PostMapping("/login")
     public ResponseEntity<SuccessDto> login(@RequestBody LoginDto dto) {
         try {
-            var authRequest =
-                    UsernamePasswordAuthenticationToken.unauthenticated(dto.username(), dto.password());
-            var authResult =
-                    authenticationManager.authenticate(authRequest);
+            var authResult = getAuthResult(dto);
 
             if (authResult.isAuthenticated()) {
                 var authUser = (User) authResult.getPrincipal();
@@ -60,6 +58,13 @@ public class LoginController {
                     "Could not login",
                     exception.getMessage());
         }
+    }
+
+    private Authentication getAuthResult(LoginDto dto) {
+        var authRequest = UsernamePasswordAuthenticationToken
+                .unauthenticated(dto.username(), dto.password());
+
+        return authenticationManager.authenticate(authRequest);
     }
 
 }

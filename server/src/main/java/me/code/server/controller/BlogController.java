@@ -34,8 +34,8 @@ public class BlogController {
     }
 
     @GetMapping("/search")
-    public List<Blog> getSearchedBlogs(@RequestParam String search, @RequestParam String filter) {
-        return blogService.getSearchedBlogs(search, filter);
+    public List<Blog> getSearchedBlogs(@RequestParam String query, @RequestParam String filter) {
+        return blogService.getSearchedBlogs(query, filter);
     }
 
     @PostMapping("/publish")
@@ -43,6 +43,5 @@ public class BlogController {
         var result = blogService.publishBlog(user, dto.title(), dto.text());
         return result.toResponseEntity();
     }
-
 
 }
