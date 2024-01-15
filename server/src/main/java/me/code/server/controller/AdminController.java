@@ -1,5 +1,6 @@
 package me.code.server.controller;
 
+import me.code.server.dto.response.Result;
 import me.code.server.dto.response.SuccessDto;
 import me.code.server.service.BlogServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,13 +22,13 @@ public class AdminController {
     }
 
     @DeleteMapping("/blogs/delete/all")
-    public ResponseEntity<SuccessDto> deleteAllBlogs() {
+    public ResponseEntity<Result<SuccessDto>> deleteAllBlogs() {
         var result = blogService.deleteAllBlogs();
         return result.toResponseEntity();
     }
 
     @DeleteMapping("/blogs/delete/{blogId}")
-    public ResponseEntity<SuccessDto> deleteAllBlogs(@PathVariable String blogId) {
+    public ResponseEntity<Result<SuccessDto>> deleteAllBlogs(@PathVariable String blogId) {
         var result = blogService.deleteBlog(blogId);
         return result.toResponseEntity();
     }

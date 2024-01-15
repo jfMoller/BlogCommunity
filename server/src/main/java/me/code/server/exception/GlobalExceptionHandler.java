@@ -1,6 +1,7 @@
 package me.code.server.exception;
 
 import me.code.server.dto.response.ErrorDto;
+import me.code.server.dto.response.Result;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -13,7 +14,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-    private ResponseEntity<ErrorDto> buildResponseEntity(CustomRuntimeException exception) {
+    private ResponseEntity<Result<ErrorDto>> buildResponseEntity(CustomRuntimeException exception) {
         HttpStatus status = exception.getStatus();
         String message = exception.getMessage();
         String errorDetails = exception.getExceptionMessage();
@@ -22,7 +23,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler({CustomRuntimeException.class})
-    public ResponseEntity<ErrorDto> handleUncheckedException(CustomRuntimeException exception) {
+    public ResponseEntity<Result<ErrorDto>> handleUncheckedException(CustomRuntimeException exception) {
         return buildResponseEntity(exception);
     }
 

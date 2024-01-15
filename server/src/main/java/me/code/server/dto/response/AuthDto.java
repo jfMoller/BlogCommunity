@@ -3,7 +3,7 @@ package me.code.server.dto.response;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.http.HttpStatus;
 
-public class AuthSuccessDto extends SuccessDto {
+public class AuthDto extends Result<AuthDto> {
 
     @JsonProperty("userRole")
     private String userRole;
@@ -11,8 +11,8 @@ public class AuthSuccessDto extends SuccessDto {
     @JsonProperty("jwtToken")
     private String jwtToken;
 
-    public AuthSuccessDto(HttpStatus status, String message, String userRole, String jwtToken) {
-        super(status, message);
+    public AuthDto(HttpStatus status, String message, String userRole, String jwtToken) {
+        super(status, message, true);
         this.userRole = userRole;
         this.jwtToken = jwtToken;
     }

@@ -1,8 +1,8 @@
 package me.code.server.controller;
 
 import me.code.server.dto.request.LoginDto;
-import me.code.server.dto.response.AuthSuccessDto;
-import me.code.server.dto.response.SuccessDto;
+import me.code.server.dto.response.AuthDto;
+import me.code.server.dto.response.Result;
 import me.code.server.exception.CustomRuntimeException;
 import me.code.server.model.User;
 import me.code.server.security.JwtProvider;
@@ -31,7 +31,7 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<SuccessDto> login(@RequestBody LoginDto dto) {
+    public ResponseEntity<Result<AuthDto>> login(@RequestBody LoginDto dto) {
         try {
             var authResult = getAuthResult(dto);
 
@@ -39,7 +39,7 @@ public class LoginController {
                 var authUser = (User) authResult.getPrincipal();
                 String jwtToken = jwtProvider.generateToken(authUser);
 
-                return new AuthSuccessDto(
+                return new AuthDto(
                         HttpStatus.OK,
                         "Login successful",
                         authUser.getRole().toString(),

@@ -1,6 +1,7 @@
 package me.code.server.controller;
 
 import me.code.server.dto.request.PublishBlogDto;
+import me.code.server.dto.response.Result;
 import me.code.server.dto.response.SuccessDto;
 import me.code.server.model.Blog;
 import me.code.server.model.User;
@@ -39,7 +40,7 @@ public class BlogController {
     }
 
     @PostMapping("/publish")
-    public ResponseEntity<SuccessDto> publishBlog(@CurrentUser User user, @RequestBody PublishBlogDto dto) {
+    public ResponseEntity<Result<SuccessDto>> publishBlog(@CurrentUser User user, @RequestBody PublishBlogDto dto) {
         var result = blogService.publishBlog(user, dto.title(), dto.text());
         return result.toResponseEntity();
     }

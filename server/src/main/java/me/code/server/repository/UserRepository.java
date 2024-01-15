@@ -13,5 +13,9 @@ public interface UserRepository extends Neo4jRepository<User, String> {
     @Query("MATCH (u:User) WHERE u.username = $username RETURN u")
     Optional<User> findByUsername(String username);
 
+    default boolean isNewUser(String username) {
+        return findByUsername(username).isEmpty();
+    }
+
 }
 

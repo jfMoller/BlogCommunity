@@ -4,20 +4,18 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDateTime;
 
 @Getter
-public abstract class Result {
+public abstract class Result<T> implements ResponseEntityConvertible<Result<T>> {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
     protected LocalDateTime timeStamp;
 
-    @JsonProperty("success")
-    protected Boolean success;
-
-    @JsonProperty("error")
-    protected Boolean error;
+    @JsonProperty("isSuccessful")
+    protected Boolean isSuccessful;
 
     @JsonProperty("status")
     protected HttpStatus status;
@@ -25,12 +23,16 @@ public abstract class Result {
     @JsonProperty("message")
     protected String message;
 
-    public Result(HttpStatus status, String message, boolean isSuccess) {
+    public Result(HttpStatus status, String message, boolean isSuccessful) {
         this.timeStamp = LocalDateTime.now();
-        this.success = isSuccess;
-        this.error = !isSuccess;
+        this.isSuccessful = isSuccessful;
         this.status = status;
         this.message = message;
+    }
+
+    @Override
+    public ResponseEntity<Result<T>> toResponseEntity() {
+        return ResponseEntity.status(status).body(this);
     }
 
 }
