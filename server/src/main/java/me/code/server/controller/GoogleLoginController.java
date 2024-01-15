@@ -21,7 +21,7 @@ import java.net.URI;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("google")
+@RequestMapping("api/google")
 public class GoogleLoginController {
 
     private static final String USER_INFO_ENDPOINT = "https://www.googleapis.com/oauth2/v3/userinfo";

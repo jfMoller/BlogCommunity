@@ -6,7 +6,7 @@
     "src/**/*.vue",
     "cypress/support/component.*",
     "cypress/support/commands.ts"
-  ],
+, "src/router/.ts"  ],
   "exclude": [],
   "compilerOptions": {
     "composite": true
