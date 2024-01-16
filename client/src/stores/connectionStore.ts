@@ -15,10 +15,7 @@ export interface ResponseError {
 
 export const useConnectionStore = defineStore("connectionStore", () => {
   const API = {
-    submitLogin: async (
-      username: string, 
-      password: string
-      ): Promise<any> => {
+    submitLogin: async (username: string, password: string): Promise<any> => {
       const response: LoginResponseSuccess | ResponseError = await callPost(
         "/login",
         {
@@ -34,17 +31,19 @@ export const useConnectionStore = defineStore("connectionStore", () => {
       return response;
     },
 
-    getGoogleLogin: async (): Promise<any> => {
-      const response: LoginResponseSuccess | ResponseError = await callGet(
-        "/google/login"
-      );
+    getGoogleAuthUrl: async () => {
+      // Fetch the URL from the server
+      const response = await callGet("/auth/url");
+
+      if (response.url) {
+        window.location.href = response.url;
+      }
+    },
+
+    submitGoogleLogin: async (code: string) => {
+      const response = await callGet(`/auth/callback?code=${code}`);
 
       console.log(response);
-      useAuthenticationStore().methods.handleAuthentication(
-        response as LoginResponseSuccess
-      );
-
-      return response;
     },
 
     submitLogout: async () =>

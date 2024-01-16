@@ -42,7 +42,7 @@ export default defineComponent({
     }
 
     async function handleGoogleLogin() {
-      await connectionStore.API.getGoogleLogin();
+      await connectionStore.API.getGoogleAuthUrl();
     }
 
     return { username, password, handleLogin, handleGoogleLogin };
