@@ -2,7 +2,7 @@ import axios from "axios";
 import type { Method } from "axios";
 import { useAuthenticationStore } from "./authenticationStore";
 
-const baseUrl = "http://localhost:8085/api";
+const baseUrl = "http://localhost:8080/api";
 
 export async function callGet(endpoint: string) {
   return await makeRequest("GET", endpoint);

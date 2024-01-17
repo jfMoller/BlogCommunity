@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { callGet, callPost } from "./requests";
 import { useAuthenticationStore } from "./authenticationStore";
+import { onMounted } from "vue";
 
 export interface LoginResponseSuccess {
   isSuccessful: boolean;
@@ -32,7 +33,6 @@ export const useConnectionStore = defineStore("connectionStore", () => {
     },
 
     getGoogleAuthUrl: async () => {
-      // Fetch the URL from the server
       const response = await callGet("/auth/url");
 
       if (response.url) {
@@ -40,15 +40,30 @@ export const useConnectionStore = defineStore("connectionStore", () => {
       }
     },
 
-    submitGoogleLogin: async (code: string) => {
-      const response = await callGet(`/auth/callback?code=${code}`);
+    submitGoogleLogin: async (code: string): Promise<any> => {
+      const response: LoginResponseSuccess | ResponseError = await callGet(
+        `/auth/callback?code=${code}`
+      );
 
-      console.log(response);
+      useAuthenticationStore().methods.handleAuthentication(
+        response as LoginResponseSuccess
+      );
+
+      return response;
     },
 
     submitLogout: async () =>
       useAuthenticationStore().methods.handleRevokeAuthentication(),
   };
+
+  onMounted(() => {
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    const code = urlSearchParams.get("code");
+
+    if (code) {
+      API.submitGoogleLogin(code as string);
+    }
+  });
 
   return {
     API,

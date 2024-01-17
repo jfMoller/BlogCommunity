@@ -14,14 +14,6 @@ export default defineComponent({
   setup() {
     const connectionStore = useConnectionStore();
 
-    onMounted(() => {
-      const urlSearchParams = new URLSearchParams(window.location.search);
-      const code = urlSearchParams.get('code');
-
-      if (code) {
-        connectionStore.API.submitGoogleLogin(code as string);
-      }
-    })
 
     return {}
 
