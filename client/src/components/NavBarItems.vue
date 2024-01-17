@@ -1,5 +1,6 @@
 <template>
     <nav :class="[additionalClass]">
+        <BlogSearchInput />
         <StyledRouterLink text="HOME" path="/" />
         <StyledRouterLink v-if="currentUserIsAuthenticated && currentUserHasAdminRole" text="ADMIN" path="/admin" />
         <StyledRouterLink v-if="currentUserIsAuthenticated" @click="submitLogout" text="LOGOUT" path="/" />
@@ -13,6 +14,7 @@ import { computed, defineComponent } from 'vue';
 import StyledRouterLink from './StyledRouterLink.vue';
 import { useAuthorizationStore } from '@/stores/authorizationStore';
 import { useAuthenticationStore } from '@/stores/authenticationStore';
+import BlogSearchInput from './BlogSearchInput.vue';
 
 export default defineComponent({
     props: {
@@ -35,7 +37,7 @@ export default defineComponent({
         return { currentUserIsAuthenticated, currentUserHasAdminRole, submitLogout }
     },
 
-    components: { StyledRouterLink }
+    components: { StyledRouterLink, BlogSearchInput }
 },
 )
 </script>

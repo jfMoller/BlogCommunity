@@ -64,8 +64,10 @@ public class BlogServiceImpl implements BlogService {
     public List<Blog> getSearchedBlogs(String search, String filter) {
         if (search.isBlank()) {
             return loadAllBlogsWithFilter(filter);
+
         } else if (filter.isBlank()) {
             return loadSearchedBlogs(search);
+
         } else {
             return loadSearchedBlogs(search, filter);
         }

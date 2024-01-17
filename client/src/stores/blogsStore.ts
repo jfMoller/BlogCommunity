@@ -21,7 +21,7 @@ export const useBlogsStore = defineStore("blogsStore", () => {
     getAllBlogs: async (): Promise<Blog[]> => await callGet("/blogs/all"),
 
     getSearchedBlogs: async (search: string, filter: string): Promise<Blog[]> =>
-      await callGet(`/products/search?query=${search}&filter=${filter}`),
+      await callGet(`/blogs/search?search=${search}&filter=${filter}`),
 
     getBlog: async (blogId: string): Promise<Blog> =>
       await callGet(`/blogs/${blogId}`),

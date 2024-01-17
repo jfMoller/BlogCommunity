@@ -35,8 +35,8 @@ public class BlogController {
     }
 
     @GetMapping("/search")
-    public List<Blog> getSearchedBlogs(@RequestParam String query, @RequestParam String filter) {
-        return blogService.getSearchedBlogs(query, filter);
+    public List<Blog> getSearchedBlogs(@RequestParam String search, @RequestParam String filter) {
+        return blogService.getSearchedBlogs(search, filter);
     }
 
     @PostMapping("/publish")

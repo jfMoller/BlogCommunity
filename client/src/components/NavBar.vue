@@ -1,6 +1,6 @@
 <template>
   <header
-    class="bg-gray-900 border border-gray-600 w-screen flex items-center justify-center space-x-6 p-5">
+    class="bg-gray-900 border sticky top-0 border-gray-600 w-screen flex items-center justify-center space-x-6 p-5">
     <NavBarItems additionalClass="flex space-x-6 justify-center items-center" />
   </header>
 </template>

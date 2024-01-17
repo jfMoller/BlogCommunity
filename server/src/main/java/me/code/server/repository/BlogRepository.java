@@ -15,7 +15,7 @@ public interface BlogRepository extends Neo4jRepository<Blog, String> {
     Optional<Blog> findById(String blogId);
 
     @Query("MATCH (b:Blog) WHERE toLower(b.title) CONTAINS toLower($search) RETURN b " +
-            "ORDER BY CASE WHEN toLower(b.title) STARTS WITH toLower(SUBSTRING($search, 0, 1))" +
+            "ORDER BY CASE WHEN toLower(b.title) STARTS WITH toLower(substring($search, 0, 1))" +
             " THEN 0 ELSE 1 END")
     List<Blog> findBySearch(String search);
 

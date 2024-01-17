@@ -1,6 +1,6 @@
 <template>
   <NavBar />
-  <RouterView class="w-screen max-h-screen text-white p-5" />
+  <RouterView class="w-screen text-white p-5" />
 </template>
 
 <script lang="ts">

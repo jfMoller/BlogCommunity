@@ -35,7 +35,10 @@ const router = createRouter({
       path: "/blogs",
       name: "BlogsView",
       component: BlogsView,
-
+      props: (route) => ({
+        search: route.query.search,
+        filter: route.query.filter,
+      }),
     },
     {
       path: "/blogs/:blogId",
