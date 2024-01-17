@@ -29,20 +29,20 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import StyledRouterLink from '@/components/StyledRouterLink.vue';
-import { useConnectionStore } from '@/stores/connectionStore'
+import { useAuthorizationStore } from '@/stores/authorizationStore'
 
 export default defineComponent({
   setup() {
-    const connectionStore = useConnectionStore();
+    const authorizationStore = useAuthorizationStore();
     const username = ref('');
     const password = ref('');
 
     async function handleLogin() {
-      await connectionStore.API.submitLogin(username.value, password.value);
+      await authorizationStore.API.submitLogin(username.value, password.value);
     }
 
     async function handleGoogleLogin() {
-      await connectionStore.API.getGoogleAuthUrl();
+      await authorizationStore.API.getGoogleAuthUrl();
     }
 
     return { username, password, handleLogin, handleGoogleLogin };
@@ -51,4 +51,3 @@ export default defineComponent({
   components: { StyledRouterLink }
 })
 </script>
-@/stores/connectionStore

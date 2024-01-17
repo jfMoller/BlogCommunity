@@ -11,8 +11,8 @@
 <script lang="ts">
 import { computed, defineComponent } from 'vue';
 import StyledRouterLink from './StyledRouterLink.vue';
+import { useAuthorizationStore } from '@/stores/authorizationStore';
 import { useAuthenticationStore } from '@/stores/authenticationStore';
-import { useConnectionStore } from '@/stores/connectionStore';
 
 export default defineComponent({
     props: {
@@ -23,13 +23,13 @@ export default defineComponent({
     },
     setup() {
 
-        const connectionStore = useConnectionStore();
+        const authorizationStore = useAuthorizationStore();
         const authenticationStore = useAuthenticationStore();
         const currentUserIsAuthenticated = computed(() => authenticationStore.states.isAuthenticated);
         const currentUserHasAdminRole = computed(() => authenticationStore.states.hasAdminRole);
 
         function submitLogout() {
-            connectionStore.API.submitLogout()
+            authorizationStore.API.submitLogout()
         }
 
         return { currentUserIsAuthenticated, currentUserHasAdminRole, submitLogout }
@@ -38,4 +38,4 @@ export default defineComponent({
     components: { StyledRouterLink }
 },
 )
-</script>@/stores/connectionStore
+</script>

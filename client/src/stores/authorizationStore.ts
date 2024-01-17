@@ -14,7 +14,8 @@ export interface ResponseError {
   message: string;
 }
 
-export const useConnectionStore = defineStore("connectionStore", () => {
+export const useAuthorizationStore = defineStore("authorizationStore", () => {
+  
   const API = {
     submitLogin: async (username: string, password: string): Promise<any> => {
       const response: LoginResponseSuccess | ResponseError = await callPost(

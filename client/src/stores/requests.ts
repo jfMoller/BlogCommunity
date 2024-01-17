@@ -33,7 +33,7 @@ async function makeRequest(method: Method, endpoint: string, data?: any) {
       method,
       url,
       data,
-      headers: { Authorization: jwtToken ? jwtToken : null },
+      headers: { Authorization: jwtToken ? `Bearer ${jwtToken}` : null },
     });
     return result.data;
   } catch (error: any) {

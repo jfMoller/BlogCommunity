@@ -27,7 +27,7 @@ import java.util.Arrays;
 import java.util.UUID;
 
 @RestController
-public class GoogleAuthController {
+public class GoogleLoginController {
 
     @Value("${spring.security.oauth2.resourceserver.opaque-token.client-id}")
     private String clientId;
@@ -47,7 +47,7 @@ public class GoogleAuthController {
 
     private final PasswordEncoder passwordEncoder;
 
-    public GoogleAuthController(
+    public GoogleLoginController(
             GoogleOpaqueTokenIntrospector introspector,
             UserRepository userRepository,
             UserDetailsServiceImpl userDetailsService,

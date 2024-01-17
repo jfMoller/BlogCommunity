@@ -35,13 +35,12 @@ const router = createRouter({
       path: "/blogs",
       name: "BlogsView",
       component: BlogsView,
-      children: [
-        {
-          path: "/:blogId",
-          name: "BlogView",
-          component: BlogView,
-        },
-      ],
+
+    },
+    {
+      path: "/blogs/:blogId",
+      name: "BlogView",
+      component: BlogView,
     },
   ],
 });

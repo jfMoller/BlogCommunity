@@ -1,9 +1,10 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
-import type { LoginResponseSuccess } from "./connectionStore";
+import type { LoginResponseSuccess } from "./authorizationStore";
 import { useRouter } from "vue-router";
 
 export const useAuthenticationStore = defineStore("authenticationStore", () => {
+  
   const router = useRouter();
 
   const states = {

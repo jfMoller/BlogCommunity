@@ -1,19 +1,16 @@
 <template>
-  <p>Home</p>
+  <p>Welcome to Blog Community</p>
 </template>
 
 <script lang="ts">
 
-import { useConnectionStore } from '@/stores/connectionStore';
-import { defineComponent, onMounted } from 'vue';
+import { defineComponent } from 'vue';
 
 
 export default defineComponent({
   name: "HomeView",
 
   setup() {
-    const connectionStore = useConnectionStore();
-
 
     return {}
 
