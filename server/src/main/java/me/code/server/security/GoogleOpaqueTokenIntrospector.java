@@ -1,7 +1,6 @@
 package me.code.server.security;
 
-
-import me.code.server.dto.response.UserEmailInfo;
+import me.code.server.dto.response.GoogleTokenUserInfo;
 import me.code.server.exception.CustomRuntimeException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.GrantedAuthority;
@@ -19,33 +18,45 @@ public class GoogleOpaqueTokenIntrospector implements OpaqueTokenIntrospector {
 
     private final WebClient userInfoClient;
 
-
     public GoogleOpaqueTokenIntrospector(WebClient userInfoClient) {
         this.userInfoClient = userInfoClient;
     }
 
     @Override
     public OAuth2AuthenticatedPrincipal introspect(String token) {
-        Map<String, Object> attributes = new HashMap<>();
+        Map<String, Object> attributes = getUserAttributes(token);
 
+        return createOAuth2Principal(attributes);
+    }
+
+    private Map<String, Object> getUserAttributes(String token) {
         try {
-            UserEmailInfo user = userInfoClient.get()
-                    .uri(uriBuilder ->
-                            uriBuilder.path("/oauth2/v3/userinfo")
-                                    .queryParam("access_token", token).build())
-                    .retrieve()
-                    .bodyToMono(UserEmailInfo.class)
-                    .block();
+            GoogleTokenUserInfo user = fetchUserInfo(token);
+
+            Map<String, Object> attributes = new HashMap<>();
             attributes.put("email", user.email());
             attributes.put("isEmailVerified", user.email_verified());
 
+            return attributes;
+
         } catch (Exception exception) {
-            throw new CustomRuntimeException(
-                    HttpStatus.BAD_REQUEST,
-                    "Could not introspect Google token",
-                    exception.getMessage());
+            handleIntrospectionError(exception);
         }
 
+        return new HashMap<>();
+    }
+
+    private GoogleTokenUserInfo fetchUserInfo(String token) {
+        return userInfoClient.get()
+                .uri(uriBuilder ->
+                        uriBuilder.path("/oauth2/v3/userinfo")
+                                .queryParam("access_token", token).build())
+                .retrieve()
+                .bodyToMono(GoogleTokenUserInfo.class)
+                .block();
+    }
+
+    private OAuth2AuthenticatedPrincipal createOAuth2Principal(Map<String, Object> attributes) {
         return new OAuth2AuthenticatedPrincipal() {
             @Override
             public String getName() {
@@ -62,5 +73,12 @@ public class GoogleOpaqueTokenIntrospector implements OpaqueTokenIntrospector {
                 return null;
             }
         };
+    }
+
+    private void handleIntrospectionError(Exception exception) {
+        throw new CustomRuntimeException(
+                HttpStatus.BAD_REQUEST,
+                "Could not introspect Google token",
+                exception.getMessage());
     }
 }

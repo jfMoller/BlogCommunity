@@ -43,8 +43,8 @@ public class SecurityConfig {
                                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                                         .requestMatchers(
                                                 "/api/login",
-                                                "api/auth/url",
-                                                "api/auth/callback",
+                                                "api/google/auth/url",
+                                                "api/google/auth/callback",
                                                 "/api/blogs/all",
                                                 "/api/blogs/{blogId}",
                                                 "/api/blogs/search"

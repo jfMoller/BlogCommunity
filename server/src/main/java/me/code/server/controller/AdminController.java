@@ -28,7 +28,7 @@ public class AdminController {
     }
 
     @DeleteMapping("/blogs/delete/{blogId}")
-    public ResponseEntity<Result<SuccessDto>> deleteAllBlogs(@PathVariable String blogId) {
+    public ResponseEntity<Result<SuccessDto>> deleteBlog(@PathVariable String blogId) {
         var result = blogService.deleteBlog(blogId);
         return result.toResponseEntity();
     }

@@ -34,7 +34,7 @@ export const useAuthorizationStore = defineStore("authorizationStore", () => {
     },
 
     getGoogleAuthUrl: async () => {
-      const response = await callGet("/auth/url");
+      const response = await callGet("/google/auth/url");
 
       if (response.url) {
         window.location.href = response.url;
@@ -43,7 +43,7 @@ export const useAuthorizationStore = defineStore("authorizationStore", () => {
 
     submitGoogleLogin: async (code: string): Promise<any> => {
       const response: LoginResponseSuccess | ResponseError = await callGet(
-        `/auth/callback?code=${code}`
+        `/google/auth/callback?code=${code}`
       );
 
       useAuthenticationStore().methods.handleAuthentication(
