@@ -36,9 +36,10 @@ const router = createRouter({
       name: "BlogsView",
       component: BlogsView,
       props: (route) => ({
-        search: route.query.search,
-        filter: route.query.filter,
+        search: route.query.search || "",
+        filter: route.query.filter || "",
       }),
+      children: [{ path: "new", name: "ShowNewBlogFoldout", component: BlogsView }],
     },
     {
       path: "/blogs/:blogId",

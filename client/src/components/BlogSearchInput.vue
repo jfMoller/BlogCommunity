@@ -5,21 +5,20 @@
             <input type="text" v-model="search" class="bg-gray-800 px-4 py-2 w-full focus:aria-black focus:outline-none"
                 placeholder="Search our blogs" />
         </div>
-        <div v-if="isOpenDropdown"
-            class=" bg-gray-800 w-full lg:w-[28rem] transition duration-400 
-            rounded-sm min-h-max shadow-md border border-gray-700 absolute top-[2.6rem] 
+        <div v-if="isOpenDropdown" class=" bg-gray-800 w-full lg:w-[28rem] transition duration-400 
+            rounded-sm min-h-max shadow-md border border-gray-700 absolute top-[2.6rem] z-999 
             lg:top-[2.63rem] flex flex-col p-4 space-y-2">
             <h3 class="text-base font-semibold">SORT BY</h3>
             <div class="flex flex-col text-base items-start justify-center space-y-1">
                 <label>
-                    <input type="checkbox" :checked="filters.newest" @change="() => handleFilterChange('newest')"
-                        class="form-checkbox h-4 w-4" />
-                    Newest
-                </label>
-                <label>
                     <input type="checkbox" :checked="filters.oldest" @change="() => handleFilterChange('oldest')"
                         class="form-checkbox h-4 w-4" />
                     Oldest
+                </label>
+                <label>
+                    <input type="checkbox" :checked="filters.newest" @change="() => handleFilterChange('newest')"
+                        class="form-checkbox h-4 w-4" />
+                    Newest
                 </label>
             </div>
         </div>
@@ -27,7 +26,7 @@
 </template>
   
 <script lang="ts">
-import { defineComponent, ref, reactive, onMounted, watch } from 'vue';
+import { defineComponent, ref, reactive, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 
@@ -73,7 +72,7 @@ export default defineComponent({
 
         function handleSearch() {
             const queryParameters = {
-                search: search.value,
+                search: search.value || '',
                 filter: filters.newest ? 'newest' : filters.oldest ? 'oldest' : '',
             };
             router.push({ name: 'BlogsView', query: queryParameters });

@@ -23,7 +23,7 @@ export const useAuthenticationStore = defineStore("authenticationStore", () => {
         }
 
         if (states.isAuthenticated.value) {
-          router.push({ name: "HomeView" });
+          router.push({ name: "BlogsView" });
         } else {
           router.push({ name: "LoginView" });
         }

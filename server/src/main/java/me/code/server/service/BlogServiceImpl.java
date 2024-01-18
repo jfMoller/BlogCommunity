@@ -42,7 +42,7 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     public List<Blog> getAllBlogs() {
-        return blogRepository.findAll();
+        return blogRepository.findAllAndOrderByNewest();
     }
 
     @Override
