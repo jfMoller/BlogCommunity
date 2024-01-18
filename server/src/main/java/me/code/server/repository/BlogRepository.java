@@ -11,25 +11,25 @@ import java.util.Optional;
 @Repository
 public interface BlogRepository extends Neo4jRepository<Blog, String> {
 
-    @Query("MATCH (b:Blog) WHERE b.id = $blogId RETURN b")
+    @Query("MATCH (u:User)<-[pb:PUBLISHED_BY]-(b:Blog) WHERE b.id = $blogId RETURN b, pb, u")
     Optional<Blog> findById(String blogId);
 
-    @Query("MATCH (b:Blog) WHERE toLower(b.title) CONTAINS toLower($search) RETURN b " +
+    @Query("MATCH (u:User)<-[pb:PUBLISHED_BY]-(b:Blog) WHERE toLower(b.title) CONTAINS toLower($search) RETURN b, pb, u " +
             "ORDER BY CASE WHEN toLower(b.title) STARTS WITH toLower(substring($search, 0, 1))" +
             " THEN 0 ELSE 1 END")
     List<Blog> findBySearch(String search);
 
-    @Query("MATCH (b:Blog) RETURN b ORDER BY b.timeStamp DESC")
+    @Query("MATCH (u:User)<-[pb:PUBLISHED_BY]-(b:Blog) RETURN b, pb, u ORDER BY b.timeStamp DESC")
     List<Blog> findAllAndOrderByNewest();
 
-    @Query("MATCH (b:Blog) RETURN b ORDER BY b.timeStamp ASC")
+    @Query("MATCH (u:User)<-[pb:PUBLISHED_BY]-(b:Blog) RETURN b, pb, u ORDER BY b.timeStamp ASC")
     List<Blog> findAllAndOrderByOldest();
 
-    @Query("MATCH (b:Blog) WHERE toLower(b.title) CONTAINS toLower($search) RETURN b " +
+    @Query("MATCH (u:User)<-[pb:PUBLISHED_BY]-(b:Blog) WHERE toLower(b.title) CONTAINS toLower($search) RETURN b, pb, u " +
             "ORDER BY b.timeStamp DESC")
     List<Blog> findBySearchAndOrderByNewest(String search);
 
-    @Query("MATCH (b:Blog) WHERE toLower(b.title) CONTAINS toLower($search) RETURN b " +
+    @Query("MATCH (u:User)<-[pb:PUBLISHED_BY]-(b:Blog) WHERE toLower(b.title) CONTAINS toLower($search) RETURN b, pb, u " +
             "ORDER BY b.timeStamp ASC")
     List<Blog> findBySearchAndOrderByOldest(String search);
 

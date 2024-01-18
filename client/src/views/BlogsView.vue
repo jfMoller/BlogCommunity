@@ -2,7 +2,8 @@
   <div class="max-w-2xl mx-auto my-8">
     <div class="flex justify-between items-center">
       <p class="text-2xl font-bold">Blogs</p>
-      <button v-if="isCurrentUserAuthenticated" @click="openNewBlogFoldout" class="bg-blue-800 text-white px-4 py-2 rounded-md hover:bg-blue-900">
+      <button v-if="isCurrentUserAuthenticated" @click="openNewBlogFoldout"
+        class="bg-blue-800 text-white px-4 py-2 rounded-md hover:bg-blue-900">
         Create New Blog
       </button>
       <NewBlogFoldout :isOpen="isNewBlogFoldoutOpen" :onClose="closeNewBlogFoldout" header="New Blog" />
@@ -11,12 +12,15 @@
     <div v-if="loading" class="text-gray-600">Loading...</div>
 
     <div v-else>
-      <div v-for="blog in blogs" :key="blog.id" class="my-4 border-b pb-4">
-        <div class="cursor-pointer hover:bg-gray-900 p-5" @click="showBlogView(blog.id)">
+      <div v-for="blog in blogs" :key="blog.id"
+        class="my-4 pb-4 border border-gray-700 hover:border-gray-500 bg-gray-900 text-white">
+        <div class="flex space-x-5 justify-end items-center border bg-gray-800 border-gray-700 py-1 px-5">
+          <p class="font-bold">{{ blog.author }}</p>
+          <p>{{ blog.timeStamp.split('T')[0] + " - " + blog.timeStamp.split('T')[1].slice(0, 5) }}</p>
+        </div>
+        <div class="cursor-pointer p-5" @click="showBlogView(blog.id)">
           <h2 class="text-xl font-bold mb-2">{{ blog.title }}</h2>
-          <p class="text-gray-700">{{ blog.text }}</p>
-          <p class="text-gray-600 mt-2">Author: {{ blog.author }}</p>
-          <p class="text-gray-600">Published on: {{ blog.timeStamp }}</p>
+          <p>{{ (blog.text.length > 30) ? blog.text.slice(0, 30) + "..." : blog.text }}</p>
         </div>
       </div>
     </div>

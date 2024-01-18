@@ -35,4 +35,9 @@ public class Blog {
         this.text = text;
         this.timeStamp = LocalDateTime.now();
     }
+
+    @JsonProperty("author")
+    public String parseUserAsAuthor() {
+        return user.getUsername();
+    }
 }

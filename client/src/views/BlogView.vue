@@ -1,11 +1,13 @@
 <template>
-  <section>
-    <div v-if="blog" class="flex justify-center">
-      <div class="cursor-pointer p-5 border border-gray-700">
-        <h2 class="text-xl font-bold mb-2">{{ blog.title }}</h2>
-        <p class="text-gray-700">{{ blog.text }}</p>
-        <p class="text-gray-600 mt-2">Author: {{ blog.author }}</p>
-        <p class="text-gray-600">Published on: {{ blog.timeStamp }}</p>
+  <section class="flex justify-center">
+    <div v-if="blog" class="my-4 pb-4 border border-gray-700 bg-gray-900 text-white p-5 lg:min-w-[60%] lg:max-w-[60%]">
+      <div class="flex justify-end items-center">
+        <p>{{ blog.timeStamp.split('T')[0] + " - " + blog.timeStamp.split('T')[1].slice(0, 5) }}</p>
+      </div>
+      <h2 class="text-xl font-bold mb-5">{{ blog.title }}</h2>
+      <p class="mb-5">{{ blog.text }}</p>
+      <div class="flex justify-end items-center">
+        <p>Written by <span class="font-bold">{{ blog.author }}</span></p>
       </div>
     </div>
   </section>
