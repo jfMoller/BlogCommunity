@@ -4,7 +4,6 @@ import type { LoginResponseSuccess } from "./authorizationStore";
 import { useRouter } from "vue-router";
 
 export const useAuthenticationStore = defineStore("authenticationStore", () => {
-  
   const router = useRouter();
 
   const states = {
@@ -42,6 +41,7 @@ export const useAuthenticationStore = defineStore("authenticationStore", () => {
 
   function revokeAuthentication() {
     states.isAuthenticated.value = false;
+    states.hasAdminRole.value = false;
   }
 
   function storeJwtToken(token: string) {

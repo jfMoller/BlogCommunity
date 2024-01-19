@@ -1,6 +1,6 @@
 <template>
     <nav :class="[additionalClass]">
-        <StyledRouterLink text="BC" path="/" />
+        <StyledRouterLink text="BC_LOGO" path="/" />
         <BlogSearchInput />
         <StyledRouterLink v-if="currentUserIsAuthenticated && currentUserHasAdminRole" text="ADMIN" path="/admin" />
         <StyledRouterLink v-if="currentUserIsAuthenticated" @click="submitLogout" text="LOGOUT" path="/" />

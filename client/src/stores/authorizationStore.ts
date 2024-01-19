@@ -15,7 +15,6 @@ export interface ResponseError {
 }
 
 export const useAuthorizationStore = defineStore("authorizationStore", () => {
-  
   const API = {
     submitLogin: async (username: string, password: string): Promise<any> => {
       const response: LoginResponseSuccess | ResponseError = await callPost(

@@ -15,9 +15,7 @@ export interface PublishBlogDto {
 }
 
 export const useBlogsStore = defineStore("blogsStore", () => {
-  
   const API = {
-
     getAllBlogs: async (): Promise<Blog[]> => await callGet("/blogs/all"),
 
     getSearchedBlogs: async (search: string, filter: string): Promise<Blog[]> =>
@@ -28,7 +26,6 @@ export const useBlogsStore = defineStore("blogsStore", () => {
 
     publishBlog: async (dto: PublishBlogDto) =>
       await callPost("/blogs/publish", dto),
-
   };
 
   return {

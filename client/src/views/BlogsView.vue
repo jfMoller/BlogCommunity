@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-2xl mx-auto my-8">
+  <section class="max-w-2xl mx-auto my-8 bg-gray-900 p-5 border border-gray-700">
     <div class="flex justify-between items-center">
       <p class="text-2xl font-bold">Blogs</p>
       <button v-if="isCurrentUserAuthenticated" @click="openNewBlogFoldout"
@@ -24,7 +24,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </section>
 </template>
 
 <script lang="ts">
@@ -34,8 +34,6 @@ import type { Blog } from '@/stores/blogsStore';
 import { useRoute, useRouter } from 'vue-router';
 import { useAuthenticationStore } from '@/stores/authenticationStore';
 import NewBlogFoldout from '@/components/NewBlogFoldout.vue';
-
-
 
 export default defineComponent({
   name: 'BlogsView',
@@ -101,7 +99,6 @@ export default defineComponent({
         getSearchedBlogs(search, filter);
       }
     }
-
 
     function isEmpty(query: string): boolean {
       return query === '';

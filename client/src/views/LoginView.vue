@@ -1,6 +1,6 @@
 <template>
-  <div class="flex justify-center items-center">
-    <div class="border border-gray-600 bg-gray-900 p-8 rounded shadow-lg w-[25rem]">
+  <section class="flex justify-center items-center">
+    <div class="border border-gray-600 bg-gray-900 p-8 rounded shadow-lg w-[30rem]">
       <h2 class="text-2xl mb-4">Login</h2>
       <form @submit.prevent="handleLogin">
         <div class="mb-4">
@@ -14,16 +14,15 @@
             class="w-full px-3 py-2 border rounded border-gray-700 bg-gray-800 focus:outline-none" required />
         </div>
         <button type="submit"
-          class="w-full bg-black border border-gray-700 hover:bg-gray-800 hover:border-gray-600 transition duration-9000 text-white font-bold py-2 px-4 rounded focus:outline-none mb-4">Login</button>
+          class="w-full bg-black border border-gray-700 hover:bg-gray-800 hover:border-gray-600 transition duration-9000 text-white font-bold py-2 px-4 rounded focus:outline-none mb-4">
+          Login</button>
       </form>
-
-      <!-- Google Login Button -->
       <button @click="handleGoogleLogin"
         class="w-full bg-blue-500 border border-gray-700 hover:bg-blue-600 hover:border-gray-600 transition duration-9000 text-white font-bold py-2 px-4 rounded focus:outline-none">
         Login with Google
       </button>
     </div>
-  </div>
+  </section>
 </template>
 
 <script lang="ts">

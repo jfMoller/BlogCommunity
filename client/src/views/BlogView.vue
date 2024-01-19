@@ -34,8 +34,6 @@ export default defineComponent({
       blog
     };
   },
-  components: {
-  }
 
 });
 </script>
