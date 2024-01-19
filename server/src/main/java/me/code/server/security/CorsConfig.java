@@ -1,10 +1,10 @@
 package me.code.server.security;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import se.eris.notnull.NotNull;
 
 @Configuration
 public class CorsConfig {
@@ -18,7 +18,7 @@ public class CorsConfig {
             public void addCorsMappings(@NotNull CorsRegistry registry) {
                 registry.addMapping("/**")
                         .allowedOriginPatterns(FRONTEND_ORIGIN_URL)
-                        .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE");
+                        .allowedMethods("GET", "POST", "DELETE");
             }
         };
     }
