@@ -33,18 +33,10 @@ public class LoginController {
     @PostMapping("/login")
     public ResponseEntity<Result<AuthDto>> login(@RequestBody LoginDto dto) {
         try {
-            var authResult = getAuthResult(dto);
+            var authResult = authenticateUser(dto);
 
             if (authResult.isAuthenticated()) {
-                var authUser = (User) authResult.getPrincipal();
-                String jwtToken = jwtProvider.generateToken(authUser);
-
-                return new AuthDto(
-                        HttpStatus.OK,
-                        "Login successful",
-                        authUser.getRole().toString(),
-                        jwtToken)
-                        .toResponseEntity();
+                return handleSuccessfulAuthentication(authResult);
 
             } else {
                 throw new CustomRuntimeException(
@@ -60,7 +52,18 @@ public class LoginController {
         }
     }
 
-    private Authentication getAuthResult(LoginDto dto) {
+    private ResponseEntity<Result<AuthDto>> handleSuccessfulAuthentication(Authentication authResult) {
+        User authUser = (User) authResult.getPrincipal();
+        String jwtToken = jwtProvider.generateToken(authUser);
+
+        return new AuthDto(
+                HttpStatus.OK,
+                "Login successful",
+                authUser.getRole().toString(),
+                jwtToken).toResponseEntity();
+    }
+
+    private Authentication authenticateUser(LoginDto dto) {
         var authRequest = UsernamePasswordAuthenticationToken
                 .unauthenticated(dto.username(), dto.password());
 

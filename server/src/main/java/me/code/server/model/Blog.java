@@ -37,7 +37,7 @@ public class Blog {
     }
 
     @JsonProperty("author")
-    public String parseUserAsAuthor() {
+    public String getAuthorUsername() {
         return user.getUsername();
     }
 }

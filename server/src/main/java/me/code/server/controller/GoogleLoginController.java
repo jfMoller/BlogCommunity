@@ -3,7 +3,7 @@ package me.code.server.controller;
 import me.code.server.dto.response.AuthDto;
 import me.code.server.dto.response.GoogleAuthUrlDto;
 import me.code.server.dto.response.Result;
-import me.code.server.service.GoogleLoginService;
+import me.code.server.service.GoogleLoginServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("api/google/")
 public class GoogleLoginController {
 
-    private final GoogleLoginService googleLoginService;
+    private final GoogleLoginServiceImpl googleLoginService;
 
     @Autowired
-    public GoogleLoginController(GoogleLoginService googleLoginService) {
+    public GoogleLoginController(GoogleLoginServiceImpl googleLoginService) {
         this.googleLoginService = googleLoginService;
     }
 

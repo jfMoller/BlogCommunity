@@ -14,7 +14,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -24,9 +23,12 @@ import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.yaml.snakeyaml.Yaml;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+import java.io.InputStream;
+import java.util.Map;
 
 @Configuration
 @EnableWebSecurity
@@ -67,9 +69,6 @@ public class SecurityConfig {
         var jwtAuthenticationConverter = new JwtAuthenticationConverter();
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
 
-        var authentication = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println(authentication);
-
         return jwtAuthenticationConverter;
     }
 
@@ -95,9 +94,17 @@ public class SecurityConfig {
     }
 
     private SecretKey getSecretKey() {
+        String secretKey = getJwtSecretKey();
         return new SecretKeySpec(
-                "keyboardcat-fwfjnwjkqew9234j3nfweifwejnfwejknewffw83r2jwe".getBytes(),
+                secretKey.getBytes(),
                 "HmacSHA256");
+    }
+
+    private String getJwtSecretKey() {
+        InputStream inputStream = SecurityConfig.class.getClassLoader().getResourceAsStream("secrets-config.yml");
+        Map<String, String> config = new Yaml().load(inputStream);
+
+        return config.get("JWT_SECRET_KEY");
     }
 
     @Bean
