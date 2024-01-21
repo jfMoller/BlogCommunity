@@ -4,6 +4,7 @@ import AdminView from "../views/AdminView.vue";
 import LoginView from "../views/LoginView.vue";
 import BlogsView from "../views/BlogsView.vue";
 import BlogView from "../views/BlogView.vue";
+import VunerabilityDisclosurePolicyView from "@/views/VunerabilityDisclosurePolicyView.vue";
 import { useAuthenticationStore } from "@/stores/authenticationStore";
 
 const router = createRouter({
@@ -39,12 +40,19 @@ const router = createRouter({
         search: route.query.search || "",
         filter: route.query.filter || "",
       }),
-      children: [{ path: "new", name: "ShowNewBlogFoldout", component: BlogsView }],
+      children: [
+        { path: "new", name: "ShowNewBlogFoldout", component: BlogsView },
+      ],
     },
     {
       path: "/blogs/:blogId",
       name: "BlogView",
       component: BlogView,
+    },
+    {
+      path: "/vdp",
+      name: "VunerabilityDisclosurePolicyView",
+      component: VunerabilityDisclosurePolicyView,
     },
   ],
 });

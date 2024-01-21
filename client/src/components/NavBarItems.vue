@@ -6,6 +6,7 @@
         <StyledRouterLink v-if="currentUserIsAuthenticated" @click="submitLogout" text="LOGOUT" path="/" />
         <StyledRouterLink v-else text="LOGIN" path="/login" />
         <StyledRouterLink text="BLOGS" path="/blogs" />
+        <StyledRouterLink text="VDP" path="/vdp" />
     </nav>
 </template>
   
