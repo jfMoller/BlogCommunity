@@ -33,7 +33,22 @@ export const useAuthorizationStore = defineStore("authorizationStore", () => {
     },
 
     getGoogleAuthUrl: async () => {
-      const response = await callGet("/google/auth/url");
+      const code_verifier = window.crypto
+        .getRandomValues(new Uint32Array(20))
+        .join("");
+      const code_challenge = await generateCodeChallenge(code_verifier);
+      const code_challenge_method = "SHA-256";
+
+      sessionStorage.setItem("codeVerifier", code_verifier);
+
+      const url =
+        "/google/auth/url" +
+        "?code_challenge=" +
+        code_challenge +
+        "&code_challenge_method=" +
+        code_challenge_method;
+
+      const response = await callGet(url);
 
       if (response.url) {
         window.location.href = response.url;
@@ -42,7 +57,11 @@ export const useAuthorizationStore = defineStore("authorizationStore", () => {
 
     submitGoogleLogin: async (code: string): Promise<any> => {
       const response: LoginResponseSuccess | ResponseError = await callGet(
-        `/google/auth/callback?code=${code}`
+        "/google/auth/callback" +
+          "?code=" +
+          code +
+          "&code_verifier=" +
+          sessionStorage.getItem("codeVerifier")
       );
 
       useAuthenticationStore().methods.handleAuthentication(
@@ -64,6 +83,19 @@ export const useAuthorizationStore = defineStore("authorizationStore", () => {
       API.submitGoogleLogin(code as string);
     }
   });
+
+  async function generateCodeChallenge(code_verifier: any) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(code_verifier);
+    const digest = await window.crypto.subtle.digest("SHA-256", data);
+
+    const digestArray = Array.from(new Uint8Array(digest));
+
+    return btoa(String.fromCharCode.apply(null, digestArray))
+      .replace(/\+/g, "-")
+      .replace(/\//g, "_")
+      .replace(/=+$/, "");
+  }
 
   return {
     API,

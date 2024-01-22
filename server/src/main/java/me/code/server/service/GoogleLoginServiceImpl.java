@@ -17,8 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.OAuth2AuthenticatedPrincipal;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -41,7 +39,11 @@ public class GoogleLoginServiceImpl implements GoogleLoginService {
     private final JwtProvider jwtProvider;
     private final PasswordEncoder passwordEncoder;
 
-    public GoogleLoginServiceImpl(GoogleOpaqueTokenIntrospector introspector, UserRepository userRepository, UserDetailsServiceImpl userDetailsService, JwtProvider jwtProvider, PasswordEncoder passwordEncoder) {
+    public GoogleLoginServiceImpl(
+            GoogleOpaqueTokenIntrospector introspector,
+            UserRepository userRepository,
+            UserDetailsServiceImpl userDetailsService,
+            JwtProvider jwtProvider, PasswordEncoder passwordEncoder) {
         this.introspector = introspector;
         this.userRepository = userRepository;
         this.userDetailsService = userDetailsService;
@@ -50,18 +52,22 @@ public class GoogleLoginServiceImpl implements GoogleLoginService {
     }
 
     @Override
-    public GoogleAuthUrlDto generateAuthUrl() {
-        String url = new GoogleAuthorizationCodeRequestUrl(
+    public GoogleAuthUrlDto generateAuthUrl(String codeChallenge, String codeChallengeMethod) {
+        GoogleAuthorizationCodeRequestUrl urlRequest = new GoogleAuthorizationCodeRequestUrl(
                 clientId, FRONTEND_ORIGIN_URL,
-                Arrays.asList("email", "openid")).build();
+                Arrays.asList("email", "openid"));
+        urlRequest.setCodeChallenge(codeChallenge);
+        urlRequest.setCodeChallengeMethod("S256");
+
+        var url = urlRequest.build();
+
         return new GoogleAuthUrlDto(url);
     }
 
     @Override
-    @GetMapping("auth/callback")
-    public Result<AuthDto> callBackLogin(@RequestParam("code") String code) {
+    public Result<AuthDto> callBackLogin(String code, String codeVerifier) {
         try {
-            String token = exchangeCodeForToken(code);
+            String token = exchangeCodeForToken(code, codeVerifier);
 
             OAuth2AuthenticatedPrincipal principal = introspector.introspect(token);
             String userEmail = (String) principal.getAttributes().get("email");
@@ -81,13 +87,16 @@ public class GoogleLoginServiceImpl implements GoogleLoginService {
         }
     }
 
-    private String exchangeCodeForToken(String code) throws IOException {
-        return new GoogleAuthorizationCodeTokenRequest(
+    private String exchangeCodeForToken(String code, String codeVerifier) throws IOException {
+
+        var tokenRequest = new GoogleAuthorizationCodeTokenRequest(
                 new NetHttpTransport(),
                 new GsonFactory(),
                 clientId, clientSecret,
-                code, FRONTEND_ORIGIN_URL)
-                .execute().getAccessToken();
+                code, FRONTEND_ORIGIN_URL);
+        tokenRequest.set("code_verifier", codeVerifier);
+
+        return tokenRequest.execute().getAccessToken();
     }
 
     private boolean tokenHasValidUnregisteredEmail(String userEmail, boolean isEmailVerified) {

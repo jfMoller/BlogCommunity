@@ -32,7 +32,6 @@ public class GoogleOpaqueTokenIntrospector implements OpaqueTokenIntrospector {
     private Map<String, Object> getUserAttributes(String token) {
         try {
             GoogleTokenUserInfo user = fetchUserInfo(token);
-
             Map<String, Object> attributes = new HashMap<>();
             attributes.put("email", user.email());
             attributes.put("isEmailVerified", user.email_verified());
