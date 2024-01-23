@@ -53,15 +53,22 @@ public class GoogleLoginServiceImpl implements GoogleLoginService {
 
     @Override
     public GoogleAuthUrlDto generateAuthUrl(String codeChallenge, String codeChallengeMethod) {
-        GoogleAuthorizationCodeRequestUrl urlRequest = new GoogleAuthorizationCodeRequestUrl(
-                clientId, FRONTEND_ORIGIN_URL,
-                Arrays.asList("email", "openid"));
-        urlRequest.setCodeChallenge(codeChallenge);
-        urlRequest.setCodeChallengeMethod("S256");
-
-        var url = urlRequest.build();
+        var requestUrl = createAuthCodeRequestUrl(codeChallenge, codeChallengeMethod);
+        String url = requestUrl.build();
 
         return new GoogleAuthUrlDto(url);
+    }
+
+    private GoogleAuthorizationCodeRequestUrl createAuthCodeRequestUrl(
+            String codeChallenge,
+            String codeChallengeMethod) {
+        var requestUrl = new GoogleAuthorizationCodeRequestUrl(
+                clientId, FRONTEND_ORIGIN_URL,
+                Arrays.asList("email", "openid"));
+        requestUrl.setCodeChallenge(codeChallenge);
+        requestUrl.setCodeChallengeMethod(codeChallengeMethod);
+
+        return requestUrl;
     }
 
     @Override
@@ -88,7 +95,12 @@ public class GoogleLoginServiceImpl implements GoogleLoginService {
     }
 
     private String exchangeCodeForToken(String code, String codeVerifier) throws IOException {
+        var tokenRequest = createAuthCodeTokenRequest(code, codeVerifier);
 
+        return tokenRequest.execute().getAccessToken();
+    }
+
+    private GoogleAuthorizationCodeTokenRequest createAuthCodeTokenRequest(String code, String codeVerifier) {
         var tokenRequest = new GoogleAuthorizationCodeTokenRequest(
                 new NetHttpTransport(),
                 new GsonFactory(),
@@ -96,7 +108,7 @@ public class GoogleLoginServiceImpl implements GoogleLoginService {
                 code, FRONTEND_ORIGIN_URL);
         tokenRequest.set("code_verifier", codeVerifier);
 
-        return tokenRequest.execute().getAccessToken();
+        return tokenRequest;
     }
 
     private boolean tokenHasValidUnregisteredEmail(String userEmail, boolean isEmailVerified) {

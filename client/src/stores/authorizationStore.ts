@@ -15,6 +15,17 @@ export interface ResponseError {
 }
 
 export const useAuthorizationStore = defineStore("authorizationStore", () => {
+  onMounted(handleGoogleLoginTrigger);
+
+  function handleGoogleLoginTrigger() {
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    const code = urlSearchParams.get("code");
+
+    if (code) {
+      API.submitGoogleLogin(code as string);
+    }
+  }
+
   const API = {
     submitLogin: async (username: string, password: string): Promise<any> => {
       const response: LoginResponseSuccess | ResponseError = await callPost(
@@ -33,11 +44,9 @@ export const useAuthorizationStore = defineStore("authorizationStore", () => {
     },
 
     getGoogleAuthUrl: async () => {
-      const code_verifier = window.crypto
-        .getRandomValues(new Uint32Array(20))
-        .join("");
+      const code_verifier = await generateCodeVerifier();
       const code_challenge = await generateCodeChallenge(code_verifier);
-      const code_challenge_method = "SHA-256";
+      const code_challenge_method = "S256";
 
       sessionStorage.setItem("codeVerifier", code_verifier);
 
@@ -75,14 +84,9 @@ export const useAuthorizationStore = defineStore("authorizationStore", () => {
       useAuthenticationStore().methods.handleRevokeAuthentication(),
   };
 
-  onMounted(() => {
-    const urlSearchParams = new URLSearchParams(window.location.search);
-    const code = urlSearchParams.get("code");
-
-    if (code) {
-      API.submitGoogleLogin(code as string);
-    }
-  });
+  async function generateCodeVerifier() {
+    return window.crypto.getRandomValues(new Uint32Array(20)).join("");
+  }
 
   async function generateCodeChallenge(code_verifier: any) {
     const encoder = new TextEncoder();

@@ -54,6 +54,7 @@ const router = createRouter({
       name: "VunerabilityDisclosurePolicyView",
       component: VunerabilityDisclosurePolicyView,
     },
+    { path: "/:catchAll(.*)", redirect: "/" },
   ],
 });
 

@@ -1,6 +1,7 @@
 package me.code.server.repository;
 
 import me.code.server.model.Blog;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
 import org.springframework.stereotype.Repository;
@@ -12,7 +13,8 @@ import java.util.Optional;
 public interface BlogRepository extends Neo4jRepository<Blog, String> {
 
     @Query("MATCH (u:User)<-[pb:PUBLISHED_BY]-(b:Blog) WHERE b.id = $blogId RETURN b, pb, u")
-    Optional<Blog> findById(String blogId);
+    @NotNull
+    Optional<Blog> findById(@NotNull String blogId);
 
     @Query("MATCH (u:User)<-[pb:PUBLISHED_BY]-(b:Blog) WHERE toLower(b.title) CONTAINS toLower($search) RETURN b, pb, u " +
             "ORDER BY CASE WHEN toLower(b.title) STARTS WITH toLower(substring($search, 0, 1))" +

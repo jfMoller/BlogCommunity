@@ -100,7 +100,11 @@ public class SecurityConfig {
     }
 
     private String getJwtSecretKey() {
-        InputStream inputStream = SecurityConfig.class.getClassLoader().getResourceAsStream("secrets-config.yml");
+        InputStream inputStream =
+                SecurityConfig.class
+                        .getClassLoader()
+                        .getResourceAsStream("secrets-config.yml");
+
         Map<String, String> config = new Yaml().load(inputStream);
 
         return config.get("JWT_SECRET_KEY");
