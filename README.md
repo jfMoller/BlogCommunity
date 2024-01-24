@@ -4,8 +4,7 @@ Graded security assignment. Building a full-stack community-based blog site with
 
 ### How to run locally
 
-1. **Download the project:**
-    - Unzip and open it in your IDE
+1. **Download or clone the project**
 
 
 2. **Configure and start the Server App:**
