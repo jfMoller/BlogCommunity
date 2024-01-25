@@ -20,6 +20,17 @@ Graded security assignment. Building a full-stack community-based blog site with
     - npm run dev
 ```
 
+4. **Log in using the existing mock user accounts**
+```
+   Admin account:
+   { username: "admin", password: "password" }
+
+   User account:
+   { username: "user", password: "password" }
+
+   For mock user configuration, refer to the "MockUsersConfig.java" in the neo4j server package
+```
+
 ### Feature Overview
 
 - Viewing, searching and filtering all blogs as an unauthenticated user
